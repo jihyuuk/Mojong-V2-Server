@@ -4,7 +4,7 @@ spring:
   config:
     import:
       - secret/datasource.yml
-#      - secret/jwt.yml
+      - secret/jwt.yml
 
   jpa:
 #    hibernate:
