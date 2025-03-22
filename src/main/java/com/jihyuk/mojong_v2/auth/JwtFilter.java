@@ -24,7 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //토큰 가져오기
         String token = getTokenFromRequest(request);
-        System.out.println("token = " + token);
+
         if(token != null && jwtUtil.validateToken(token)){
 
             String username = jwtUtil.getUsernameFromToken(token);

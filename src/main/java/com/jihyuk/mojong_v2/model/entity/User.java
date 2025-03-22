@@ -38,4 +38,9 @@ public class User {
         createdDate = LocalDateTime.now();
     }
 
+    public User(String username, String password, ROLE role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
 }
