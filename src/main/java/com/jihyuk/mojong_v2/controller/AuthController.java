@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -39,11 +41,20 @@ public class AuthController {
                     .body("로그인 성공! " + param.getUsername() + "님 안녕하세요.");
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(UNAUTHORIZED).body(e.getMessage());
-        } catch (AccessDeniedException e){
+        } catch (AccessDeniedException e) {
             return ResponseEntity.status(FORBIDDEN).body(e.getMessage());
         }
     }
 
+    //게스트
+    @GetMapping("/guest-token")
+    public ResponseEntity<String> guest() {
+        String guestToken = authService.guestToken();
+
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + guestToken)
+                .body("토큰 정상 발행");
+    }
 
 
 }

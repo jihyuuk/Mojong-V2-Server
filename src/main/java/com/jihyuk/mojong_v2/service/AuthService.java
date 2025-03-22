@@ -3,7 +3,9 @@ package com.jihyuk.mojong_v2.service;
 import com.jihyuk.mojong_v2.auth.JwtUtil;
 import com.jihyuk.mojong_v2.model.ROLE;
 import com.jihyuk.mojong_v2.model.dto.UserParam;
+import com.jihyuk.mojong_v2.model.entity.Guest;
 import com.jihyuk.mojong_v2.model.entity.User;
+import com.jihyuk.mojong_v2.repository.GuestRepository;
 import com.jihyuk.mojong_v2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final GuestRepository guestRepository;
     private final JwtUtil jwtUtil;
 
     //회원가입
@@ -58,4 +61,15 @@ public class AuthService {
     }
 
 
+    //게스트 토큰 발행
+    public String guestToken() {
+        //나중에 qr 닫으면 토큰 발행 정지 하는 코드 고려
+        
+        //게스트 생성
+        Guest guest = new Guest();
+        guestRepository.save(guest);
+
+        //토큰발행
+        return jwtUtil.generateToken(guest.getId(), ROLE.ROLE_GUEST);
+    }
 }

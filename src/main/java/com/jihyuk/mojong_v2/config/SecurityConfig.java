@@ -1,4 +1,4 @@
-package com.jihyuk.mojong_v2;
+package com.jihyuk.mojong_v2.config;
 
 import com.jihyuk.mojong_v2.auth.JwtFilter;
 import com.jihyuk.mojong_v2.auth.JwtUtil;
@@ -43,7 +43,7 @@ public class SecurityConfig {
 
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login", "/join").permitAll()
+                .requestMatchers("/login", "/join", "/guest-token").permitAll()
                 .anyRequest().authenticated());
 
         return http.build();
