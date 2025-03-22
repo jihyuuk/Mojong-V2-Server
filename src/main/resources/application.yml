@@ -4,11 +4,11 @@ spring:
   config:
     import:
       - secret/datasource.yml
-#      - secret/jwt.yml
+      - secret/jwt.yml
 
   jpa:
-#    hibernate:
-#      ddl-auto: create
+    hibernate:
+      ddl-auto: create
     show-sql: true
 
   jackson:
