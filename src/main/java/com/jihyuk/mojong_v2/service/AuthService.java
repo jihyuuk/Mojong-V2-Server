@@ -1,7 +1,7 @@
 package com.jihyuk.mojong_v2.service;
 
 import com.jihyuk.mojong_v2.auth.JwtUtil;
-import com.jihyuk.mojong_v2.model.ROLE;
+import com.jihyuk.mojong_v2.model.enums.ROLE;
 import com.jihyuk.mojong_v2.model.dto.UserParam;
 import com.jihyuk.mojong_v2.model.entity.Guest;
 import com.jihyuk.mojong_v2.model.entity.User;
@@ -70,6 +70,6 @@ public class AuthService {
         guestRepository.save(guest);
 
         //토큰발행
-        return jwtUtil.generateToken(guest.getId(), ROLE.ROLE_GUEST);
+        return jwtUtil.generateToken(guest.getGuestname(), ROLE.ROLE_GUEST);
     }
 }
