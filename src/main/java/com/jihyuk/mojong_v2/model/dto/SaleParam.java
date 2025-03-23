@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor
-public class SaleDTO {
+public class SaleParam {
 
     private String firstItemName; //첫 아이템
     private int totalAmount; //총 금액

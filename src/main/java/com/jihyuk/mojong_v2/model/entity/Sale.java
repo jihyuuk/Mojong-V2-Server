@@ -1,6 +1,6 @@
 package com.jihyuk.mojong_v2.model.entity;
 
-import com.jihyuk.mojong_v2.model.dto.SaleDTO;
+import com.jihyuk.mojong_v2.model.dto.SaleParam;
 import com.jihyuk.mojong_v2.model.enums.Payment;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -63,7 +63,7 @@ public class Sale {
         return user != null;
     }
 
-    public Sale(SaleDTO dto, User user, Guest guest) {
+    public Sale(SaleParam dto, User user, Guest guest) {
 
         if(user != null){
             this.user = user;
