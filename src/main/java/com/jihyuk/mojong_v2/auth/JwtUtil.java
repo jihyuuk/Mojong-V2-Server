@@ -1,7 +1,7 @@
 package com.jihyuk.mojong_v2.auth;
 
 import io.jsonwebtoken.Jwts;
-import com.jihyuk.mojong_v2.model.ROLE;
+import com.jihyuk.mojong_v2.model.enums.ROLE;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

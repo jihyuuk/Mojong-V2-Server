@@ -1,6 +1,6 @@
 package com.jihyuk.mojong_v2.model.entity;
 
-import com.jihyuk.mojong_v2.model.ROLE;
+import com.jihyuk.mojong_v2.model.enums.ROLE;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

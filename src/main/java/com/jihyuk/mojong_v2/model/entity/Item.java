@@ -27,10 +27,10 @@ public class Item {
     private String photo; //사진
 
     @Column(nullable = false)
-    private Long price; //가격
+    private int price; //가격
 
     @Column(nullable = false)
-    private Long stock; //수량
+    private int stock; //수량
     
     private boolean enabled = true; //활성화 여부
 

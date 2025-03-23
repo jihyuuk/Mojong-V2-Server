@@ -2,7 +2,7 @@ package com.jihyuk.mojong_v2.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jihyuk.mojong_v2.model.ROLE;
+import com.jihyuk.mojong_v2.model.enums.ROLE;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
-import static com.jihyuk.mojong_v2.model.ROLE.*;
+import static com.jihyuk.mojong_v2.model.enums.ROLE.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JwtUtilTest {

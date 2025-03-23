@@ -36,8 +36,8 @@ class ItemDTO {
     private String name;
     private String description;
     private String photo;
-    private Long price;
-    private Long stock;
+    private int price;
+    private int stock;
 
     public ItemDTO(Item item) {
         this.id = item.getId();

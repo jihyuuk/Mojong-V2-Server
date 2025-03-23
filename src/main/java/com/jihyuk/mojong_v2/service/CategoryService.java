@@ -4,6 +4,7 @@ import com.jihyuk.mojong_v2.model.dto.ItemParam;
 import com.jihyuk.mojong_v2.model.dto.MenuDTO;
 import com.jihyuk.mojong_v2.model.entity.Category;
 import com.jihyuk.mojong_v2.repository.CategoryRepository;
+import com.jihyuk.mojong_v2.repository.GuestRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class CategoryService {
     @Transactional
     public void create(String name){
         Category category = new Category(name);
-        Category save = categoryRepository.save(category);
+        categoryRepository.save(category);
     }
 
 
@@ -49,12 +50,13 @@ public class CategoryService {
                         "아이템 " + (k++),
                         "아이템 설명칸입니다",
                         "http://img.com",
-                        1000L,
-                        200L
+                        1000,
+                        200
                 );
                 itemService.create(param);
             }
         }
+
 
     }
 

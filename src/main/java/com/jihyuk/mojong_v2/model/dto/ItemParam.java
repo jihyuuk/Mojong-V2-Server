@@ -23,9 +23,9 @@ public class ItemParam {
 
     @NotNull(message = "가격을 입력해주세요")
     @Min(value = 0, message = "가격은 0원 이상이어야 합니다.")
-    private Long price; //가격
+    private int price; //가격
 
     @NotNull(message = "수량을 입력해주세요")
     @Min(value = 0, message = "수량은 0개 이상이어야 합니다.")
-    private Long stock; //수량
+    private int stock; //수량
 }
