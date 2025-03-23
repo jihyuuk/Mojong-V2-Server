@@ -11,18 +11,18 @@ import java.util.UUID;
 @Getter
 public class Guest {
 
-    @Id
-    @Column(name = "guest_id", columnDefinition = "CHAR(36)")
-    private String id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "guest_id")
+    private Long id;
+
+    private String guestname;
 
     private LocalDateTime createdDate;
 
     @PrePersist
-    private void prePersist(){
+    protected void prePersist(){
         createdDate = LocalDateTime.now();
+        guestname = "guest_"+UUID.randomUUID();
     }
 
-    public Guest() {
-        id = UUID.randomUUID().toString();
-    }
 }
