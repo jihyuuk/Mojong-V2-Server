@@ -32,7 +32,7 @@ public class Item {
     @Column(nullable = false)
     private int stock; //수량
     
-    private boolean enabled = true; //활성화 여부
+    private boolean isPublic = true; //공개 여부
 
     public Item(Category category, ItemParam param) {
         this.category = category;

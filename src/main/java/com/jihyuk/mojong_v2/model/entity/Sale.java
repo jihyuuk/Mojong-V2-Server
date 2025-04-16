@@ -1,7 +1,7 @@
 package com.jihyuk.mojong_v2.model.entity;
 
 import com.jihyuk.mojong_v2.model.dto.SaleParam;
-import com.jihyuk.mojong_v2.model.enums.Payment;
+import com.jihyuk.mojong_v2.model.enums.PAYMENT;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class Sale {
     private int finalAmount; //합계
 
     @Enumerated(EnumType.STRING)
-    private Payment payment; //지불방법
+    private PAYMENT payment; //지불방법
 
     @OneToMany(mappedBy = "sale")
     private List<SaleItem> saleItems = new ArrayList<>(); //주문 아이템들
@@ -63,6 +63,16 @@ public class Sale {
         return user != null;
     }
 
+    public Sale(SaleParam dto, Guest guest) {
+        this.guest = guest;
+        this.firstItemName = dto.getItems().stream().findFirst().get().getName();
+        this.itemsCount = dto.getItems().size();
+        this.totalAmount = dto.getTotalAmount();
+        this.discountAmount = dto.getDiscountAmount();
+        this.finalAmount = dto.getFinalAmount();
+        this.payment = dto.getPayment();
+    }
+
     public Sale(SaleParam dto, User user, Guest guest) {
 
         if(user != null){
@@ -73,7 +83,7 @@ public class Sale {
             throw new IllegalArgumentException("주문자 파라미터 오류입니다.");
         }
 
-        this.firstItemName = dto.getFirstItemName();
+        this.firstItemName = dto.getItems().stream().findFirst().get().getName();
         this.itemsCount = dto.getItems().size();
         this.totalAmount = dto.getTotalAmount();
         this.discountAmount = dto.getDiscountAmount();

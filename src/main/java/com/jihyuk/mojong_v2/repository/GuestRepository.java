@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface GuestRepository extends JpaRepository<Guest, UUID> {
-    Optional<Guest> findByGuestname(String guestname);
+    Optional<Guest> findByName(String name);
 }
