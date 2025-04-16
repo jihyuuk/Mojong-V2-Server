@@ -140,7 +140,7 @@ public class CategoryService {
                 new ItemParam(9L, "후라이드 치킨", "바삭하고 촉촉한 전통 후라이드 치킨.", "https://picsum.photos/id/38/100/100", 17000, 50000),
                 new ItemParam(9L, "양념 치킨", "달콤하고 매콤한 특제 소스로 버무린 양념 치킨.", "https://picsum.photos/id/39/100/100", 18000, 50000),
                 new ItemParam(10L, "노각오이", "", "https://picsum.photos/id/40/100/100", 17000, 50000),
-                new ItemParam(10L, "노각오이", "바삭하고 촉촉한 전통 후라이드 치킨.", "", 17000, 50000),
+                new ItemParam(10L, "노각오이2", "바삭하고 촉촉한 전통 후라이드 치킨.", "", 17000, 50000),
                 new ItemParam(10L, "오이", "달콤하고 매콤한 특제 소스로 버무린 양념 치킨.", "", 18000, 50000),
                 new ItemParam(10L, "가지", "", "", 18000, 5)
         );

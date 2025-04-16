@@ -1,11 +1,14 @@
 package com.jihyuk.mojong_v2.controller;
 
 import com.jihyuk.mojong_v2.model.dto.HistoryDTO;
+import com.jihyuk.mojong_v2.model.dto.ItemParam;
 import com.jihyuk.mojong_v2.model.entity.User;
 import com.jihyuk.mojong_v2.service.CategoryService;
+import com.jihyuk.mojong_v2.service.ItemService;
 import com.jihyuk.mojong_v2.service.SaleService;
 import com.jihyuk.mojong_v2.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,7 @@ public class AdminController {
     private final SaleService saleService;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final ItemService itemService;
 
     //직원 관리=====================================================================
 
@@ -115,6 +119,48 @@ public class AdminController {
     
     //상품 관리=====================================================================
 
+    //상품 추가
+    @PostMapping("/item/new")
+    public ResponseEntity<String> newItem(@Valid @RequestBody ItemParam itemParam){
+        try{
+            itemService.create(itemParam);
+            return  ResponseEntity.ok("아이템 추가 성공!");
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
+        }catch (DuplicateKeyException e){
+            return ResponseEntity.status(CONFLICT).body(e.getMessage());
+        }
+    }
+
+    //상품 삭제
+    @DeleteMapping("/item/{id}")
+    public ResponseEntity<String> deleteItem(@PathVariable Long id){
+        itemService.delete(id);
+        return  ResponseEntity.ok("카테고리 삭제 성공!");
+    }
+
+    //상품 수정
+    @PutMapping("/item/{id}")
+    public ResponseEntity<String> updateItem(@PathVariable Long id, @Valid @RequestBody ItemParam itemParam){
+        try{
+            itemService.update(id, itemParam);
+            return  ResponseEntity.ok("아이템 수정 성공!");
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
+        }catch (DuplicateKeyException e){
+            return ResponseEntity.status(CONFLICT).body(e.getMessage());
+        }
+    }
+
+
+    //상품 순서변경
+    @PutMapping("/item/seq")
+    public ResponseEntity<String> seqItems(@RequestBody List<Long> itemIds){
+        itemService.changeSeq(itemIds);
+        return ResponseEntity.ok("아이템 순서 변경 성공!");
+    }
 
 
 

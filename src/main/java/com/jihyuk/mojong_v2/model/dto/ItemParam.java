@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ItemParam {
 
-    @NotNull(message = "카테고리를 입력해주세요.")
     private Long categoryId; //카테고리 id
 
     @NotBlank(message = "상품명을 입력해주세요.")

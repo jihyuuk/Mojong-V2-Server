@@ -31,16 +31,29 @@ public class Item {
 
     @Column(nullable = false)
     private int stock; //수량
+
+    private int seq; //순서
     
     private boolean isPublic = true; //공개 여부
 
     public Item(Category category, ItemParam param) {
         this.category = category;
-        this.name = param.getName();
-        this.description = param.getDescription();
-        this.photo = param.getPhoto();
+        this.name = param.getName().trim();
+        this.description = param.getDescription().trim();
+        this.photo = param.getPhoto().trim();
         this.price = param.getPrice();
         this.stock = param.getStock();
     }
 
+    public void update(ItemParam param){
+        this.name = param.getName().trim();
+        this.description = param.getDescription().trim();
+        this.photo = param.getPhoto().trim();
+        this.price = param.getPrice();
+        this.stock = param.getStock();
+    }
+
+    public void setSeq(int seq) {
+        this.seq = seq;
+    }
 }
