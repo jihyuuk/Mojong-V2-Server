@@ -63,8 +63,7 @@ public class Sale {
         return user != null;
     }
 
-    public Sale(SaleParam dto, Guest guest) {
-        this.guest = guest;
+    private Sale(SaleParam dto){
         this.firstItemName = dto.getItems().stream().findFirst().get().getName();
         this.itemsCount = dto.getItems().size();
         this.totalAmount = dto.getTotalAmount();
@@ -73,23 +72,14 @@ public class Sale {
         this.payment = dto.getPayment();
     }
 
-    public Sale(SaleParam dto, User user, Guest guest) {
+    public Sale(SaleParam dto, Guest guest) {
+        this(dto);
+        this.guest = guest;
+    }
 
-        if(user != null){
-            this.user = user;
-        } else if (guest != null) {
-            this.guest = guest;
-        }else{
-            throw new IllegalArgumentException("주문자 파라미터 오류입니다.");
-        }
-
-        this.firstItemName = dto.getItems().stream().findFirst().get().getName();
-        this.itemsCount = dto.getItems().size();
-        this.totalAmount = dto.getTotalAmount();
-        this.discountAmount = dto.getDiscountAmount();
-        this.finalAmount = dto.getFinalAmount();
-        this.payment = dto.getPayment();
-
+    public Sale(SaleParam dto, User user) {
+        this(dto);
+        this.user = user;
     }
 
 }

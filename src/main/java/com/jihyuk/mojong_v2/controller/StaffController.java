@@ -15,7 +15,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -35,13 +37,19 @@ public class StaffController {
 
     //주문하기
     @PostMapping("/order")
-    public ResponseEntity<String> order(@Valid @RequestBody SaleParam saleParam, Authentication authentication){
+    public ResponseEntity<Map<String, Object>> order(@Valid @RequestBody SaleParam saleParam, Authentication authentication){
         try {
-            //saleService.sale(saleParam, authentication);
-        }catch (EntityNotFoundException e){
-            return ResponseEntity.status(UNAUTHORIZED).body(e.getMessage());
+            long saleId = saleService.staffSale(saleParam, authentication);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "주문 완료");
+            response.put("saleId", saleId);
+
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e){
+            return ResponseEntity.status(UNAUTHORIZED)
+                    .body(Map.of("error", e.getMessage()));
         }
-        return ResponseEntity.ok("주문 완료");
     }
 
 

@@ -27,7 +27,31 @@ public class SaleService {
     private final SaleItemRepository saleItemRepository;
     private final UserRepository userRepository;
     private final GuestRepository guestRepository;
-    private final ItemRepository itemRepository;
+
+    //게스트 주문 서비스
+    @Transactional
+    public Long staffSale(SaleParam saleParam, Authentication authentication) {
+
+        //로그인 정보 (유저 이름, role)
+        String name = authentication.getName();
+
+        //게스트 찾기
+        User user = userRepository.findByUsernameAndEnabledTrue(name).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 직원입니다."));
+
+        //주문 생성
+        Sale sale = new Sale(saleParam, user);
+        //주문 저장
+        saleRepository.save(sale);
+
+        //주문 아이템들 생성
+        List<SaleItem> saleItems = saleParam.getItems().stream()
+                .map(dto -> new SaleItem(dto, sale))
+                .toList();
+        //주문 아이템들 저장 (나중에 bulk 고려)
+        saleItemRepository.saveAll(saleItems);
+
+        return sale.getId();
+    }
 
 
     //게스트 주문 서비스
@@ -35,10 +59,10 @@ public class SaleService {
     public Long guestSale(SaleParam saleParam, Authentication authentication) {
 
         //로그인 정보 (유저 이름, role)
-        String guestName = authentication.getName();
+        String name = authentication.getName();
 
         //게스트 찾기
-        Guest guest = guestRepository.findByName(guestName).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게스트입니다."));
+        Guest guest = guestRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게스트입니다."));
 
         //주문 생성
         Sale sale = new Sale(saleParam, guest);
