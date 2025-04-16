@@ -1,7 +1,7 @@
 package com.jihyuk.mojong_v2.model.enums;
 
-public enum Payment {
+public enum PAYMENT {
 
-    CASH, CREDIT_CARD, SELF_QR
+    CASH, CREDIT_CARD, QR_SELF, QR_CASHIER
 
 }
