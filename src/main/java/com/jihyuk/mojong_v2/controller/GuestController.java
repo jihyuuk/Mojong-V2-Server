@@ -37,7 +37,7 @@ public class GuestController {
     @PostMapping("/guest-order")
     public ResponseEntity<String> guestOrder(@Valid @RequestBody SaleParam saleParam, Authentication authentication){
         try {
-            saleService.sale(saleParam, authentication);
+            saleService.guestSale(saleParam, authentication);
         }catch (EntityNotFoundException e){
             return ResponseEntity.status(UNAUTHORIZED).body(e.getMessage());
         }

@@ -18,17 +18,14 @@ public class SaleItem {
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
-
+    private String name; //상품명
     private int price; //가격
     private int quantity; //수량
     private int totalAmount; //합계
 
-    public SaleItem(SaleItemDTO dto, Sale sale, Item item) {
+    public SaleItem(SaleItemDTO dto, Sale sale) {
         this.sale = sale;
-        this.item = item;
+        this.name = dto.getName();
         this.price = dto.getPrice();
         this.quantity = dto.getQuantity();
         this.totalAmount = dto.getTotalAmount();

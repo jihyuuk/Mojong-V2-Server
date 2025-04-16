@@ -30,38 +30,29 @@ public class SaleService {
     private final ItemRepository itemRepository;
 
 
-    //판매 서비스
+    //게스트 주문 서비스
     @Transactional
-    public void sale(SaleParam saleParam, Authentication authentication) {
+    public Long guestSale(SaleParam saleParam, Authentication authentication) {
 
         //로그인 정보 (유저 이름, role)
-        String authName = authentication.getName();
-        ROLE authRole = getRoleFromAuth(authentication);
+        String guestName = authentication.getName();
 
-        User user = null;
-        Guest guest = null;
+        //게스트 찾기
+        Guest guest = guestRepository.findByName(guestName).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게스트입니다."));
 
-        //주문자 찾기
-        if (authRole == ROLE.ROLE_GUEST) {
-            guest = guestRepository.findByGuestname(authName)
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게스트입니다."));
-        }
-        if (authRole == ROLE.ROLE_STAFF || authRole == ROLE.ROLE_ADMIN) {
-            user = userRepository.findByUsername(authName)
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저입니다."));
-        }
-
+        //주문 생성
+        Sale sale = new Sale(saleParam, guest);
         //주문 저장
-        Sale sale = new Sale(saleParam, user, guest);
         saleRepository.save(sale);
 
-        //아이템들 조회
-        Map<Long, Item> itemMap = findItems(saleParam);
-
         //주문 아이템들 생성
-        List<SaleItem> saleItems = createSaleItems(saleParam, sale, itemMap);
+        List<SaleItem> saleItems = saleParam.getItems().stream()
+                                                        .map(dto -> new SaleItem(dto, sale))
+                                                        .toList();
         //주문 아이템들 저장 (나중에 bulk 고려)
         saleItemRepository.saveAll(saleItems);
+
+        return sale.getId();
     }
 
     //주문기록들 조회
@@ -100,46 +91,5 @@ public class SaleService {
         //해당 user 의 주문 내역들 조회
         return new HistoryDetailDTO(sale);
     }
-
-
-
-
-    //아이템들 db에서 조회하기
-    private Map<Long, Item> findItems(SaleParam saleParam){
-        // 아이템 ID 목록 추출(성능 향상을 위한 로직)
-        List<Long> itemIds = saleParam.getItems().stream()
-                .map(SaleItemDTO::getId)
-                .collect(Collectors.toList());
-
-        // 아이템들을 한 번에 조회
-        List<Item> items = itemRepository.findAllById(itemIds);
-
-        // 아이템들을 Map으로 변환 (ID -> Item)
-        return items.stream()
-                .collect(Collectors.toMap(Item::getId, item -> item));
-    }
-
-    //주문 아이템들 생성 로직
-    private List<SaleItem> createSaleItems(SaleParam saleParam, Sale sale, Map<Long, Item> itemMap) {
-        return saleParam.getItems().stream().map(saleItemDTO -> {
-            // 해당 상품 찾기 (Map에서 가져오기)
-            Item item = itemMap.get(saleItemDTO.getId());
-            if (item == null) {
-                throw new EntityNotFoundException("존재하지 않는 상품입니다.");
-            }
-
-            //주문 아이템 생성
-            return new SaleItem(saleItemDTO, sale, item);
-        }).collect(Collectors.toList());
-    }
-
-    //로그인 정보에서 role 가져오기
-    private ROLE getRoleFromAuth(Authentication authentication) {
-        return ROLE.valueOf(
-                authentication.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .findFirst()
-                        .orElseThrow(() -> new RuntimeException("Role not found"))
-        );
-    }
+    
 }

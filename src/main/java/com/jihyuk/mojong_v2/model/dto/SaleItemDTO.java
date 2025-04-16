@@ -13,8 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SaleItemDTO {
 
-    @NotNull(message = "상품 id를 입력해주세요.")
-    private Long id; //상품 id
     @NotBlank(message = "상품명을 입력해주세요.")
     private String name;//상품 이름
     private int price; //가격
@@ -22,8 +20,7 @@ public class SaleItemDTO {
     private int totalAmount; //합계
 
     public SaleItemDTO(SaleItem saleItem) {
-        this.id = saleItem.getId();
-        this.name = saleItem.getItem().getName();
+        this.name = saleItem.getName();
         this.price = saleItem.getPrice();
         this.quantity = saleItem.getQuantity();
         this.totalAmount = saleItem.getTotalAmount();
