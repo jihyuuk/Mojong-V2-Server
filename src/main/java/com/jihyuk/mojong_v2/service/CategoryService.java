@@ -4,13 +4,11 @@ import com.jihyuk.mojong_v2.model.dto.ItemParam;
 import com.jihyuk.mojong_v2.model.dto.MenuDTO;
 import com.jihyuk.mojong_v2.model.entity.Category;
 import com.jihyuk.mojong_v2.repository.CategoryRepository;
-import com.jihyuk.mojong_v2.repository.GuestRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,11 +21,10 @@ public class CategoryService {
     private final SettingService settingService;
 
     @Transactional
-    public List<MenuDTO> getMenu(){
-        //모든 카테고리와 아이템 join 으로 가져오기 (조건 enabled = true)
-        //List<Category> categories = categoryRepository.findEnabledCategoryWithEnabledItems();
-        //return categories.stream().map(MenuDTO::new).collect(Collectors.toList());
-        return null;
+    public List<MenuDTO> getStaffMenu(){
+        //모든 카테고리와 아이템 join 으로 가져오기
+        List<Category> categories = categoryRepository.findEnabledCategory();
+        return categories.stream().map(MenuDTO::new).collect(Collectors.toList());
     }
 
     @Transactional

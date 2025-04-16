@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
 public class StaffController {
 
     private final CategoryService categoryService;
@@ -28,20 +30,20 @@ public class StaffController {
     //메뉴 조회
     @GetMapping("/menu")
     public List<MenuDTO> menu(){
-        return categoryService.getMenu();
+        return categoryService.getStaffMenu();
     }
 
     //주문하기
     @PostMapping("/order")
     public ResponseEntity<String> order(@Valid @RequestBody SaleParam saleParam, Authentication authentication){
         try {
-            saleService.sale(saleParam, authentication);
+            //saleService.sale(saleParam, authentication);
         }catch (EntityNotFoundException e){
-            return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(UNAUTHORIZED).body(e.getMessage());
         }
-
         return ResponseEntity.ok("주문 완료");
     }
+
 
     //팬매 기록들
     @GetMapping("/history")
