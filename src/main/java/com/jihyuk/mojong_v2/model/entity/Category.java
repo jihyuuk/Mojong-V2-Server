@@ -19,6 +19,8 @@ public class Category {
 
     private String name;
 
+    private int seq;
+
     private boolean enabled = true;
 
     @OneToMany(mappedBy = "category")
@@ -26,5 +28,17 @@ public class Category {
 
     public Category(String name) {
         this.name = name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setSeq(int seq) {
+        this.seq = seq;
     }
 }

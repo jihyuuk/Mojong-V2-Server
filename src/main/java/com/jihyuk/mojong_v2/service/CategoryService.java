@@ -5,7 +5,9 @@ import com.jihyuk.mojong_v2.model.dto.MenuDTO;
 import com.jihyuk.mojong_v2.model.entity.Category;
 import com.jihyuk.mojong_v2.repository.CategoryRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +38,53 @@ public class CategoryService {
 
     @Transactional
     public void create(String name){
+
+        if(name == null || name.isEmpty()){
+            throw new IllegalArgumentException("카테고리명을 정확히 입력해주세요.");
+        }
+
+        if(categoryRepository.existsByName(name)){
+            throw new DuplicateKeyException("이미 존재하는 카테고리 입니다.");
+        }
+
         Category category = new Category(name);
         categoryRepository.save(category);
     }
+
+    @Transactional
+    public void setDisable(Long id){
+        Category category = categoryRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 카테고리입니다."));
+        category.setSeq(-1);
+        category.setEnabled(false);
+    }
+
+    @Transactional
+    public void updateName(Long id, String name){
+
+        if(name == null || name.isEmpty()){
+            throw new IllegalArgumentException("카테고리명을 정확히 입력해주세요.");
+        }
+
+        if(categoryRepository.existsByName(name)){
+            throw new DuplicateKeyException("이미 존재하는 카테고리 입니다.");
+        }
+
+        Category category = categoryRepository.findById(id).orElseThrow(()->new IllegalArgumentException("카테고리 ID를 정확히 입력해주세요."));
+        category.setName(name);
+    }
+
+    @Transactional
+    public void changeSeq(List<Long> categoryIds){
+        for (int i = 0 ; i < categoryIds.size(); i++) {
+            Long id = categoryIds.get(i);
+            Category category = categoryRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("카테고리를 찾을 수 없습니다. ID: " + id));
+            category.setSeq(categoryIds.size()-i);
+        }
+    }
+
+
+
 
 
     //dummy data

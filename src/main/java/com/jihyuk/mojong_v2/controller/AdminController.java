@@ -2,10 +2,13 @@ package com.jihyuk.mojong_v2.controller;
 
 import com.jihyuk.mojong_v2.model.dto.HistoryDTO;
 import com.jihyuk.mojong_v2.model.entity.User;
+import com.jihyuk.mojong_v2.service.CategoryService;
 import com.jihyuk.mojong_v2.service.SaleService;
 import com.jihyuk.mojong_v2.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -13,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class AdminController {
 
     private final SaleService saleService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     //직원 관리=====================================================================
 
@@ -62,8 +65,54 @@ public class AdminController {
 
 
     //카테고리 관리=====================================================================
-  
 
+    //카테고리 추가
+    @PostMapping("/category/new")
+    public ResponseEntity<String> newCategory(@RequestBody String name){
+        try{
+            categoryService.create(name.trim());
+            return  ResponseEntity.ok("카테고리 추가 성공!");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
+        }catch (DuplicateKeyException e){
+            return ResponseEntity.status(CONFLICT).body(e.getMessage());
+        }
+    }
+
+    //카테고리 삭제
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id){
+
+        try{
+            categoryService.setDisable(id);
+            return  ResponseEntity.ok("카테고리 삭제 성공!");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
+        }
+
+    }
+
+    //카테고리 수정
+    @PutMapping("/category/{id}")
+    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody String newName){
+        try{
+            categoryService.updateName(id, newName.trim());
+            return  ResponseEntity.ok("카테고리 수정 성공!");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
+        }catch (DuplicateKeyException e){
+            return ResponseEntity.status(CONFLICT).body(e.getMessage());
+        }
+    }
+
+    //카테고리 순서변경
+    @PutMapping("/category/seq")
+    public ResponseEntity<String> seqCategory(@RequestBody List<Long> categoryIds){
+        categoryService.changeSeq(categoryIds);
+        return ResponseEntity.ok("카테고리 순서 변경 성공!");
+    }
+
+    
     //상품 관리=====================================================================
 
 
