@@ -15,14 +15,14 @@ public class Guest {
     @Column(name = "guest_id")
     private Long id;
 
-    private String guestname;
+    private String name;
 
     private LocalDateTime createdDate;
 
     @PrePersist
     protected void prePersist(){
         createdDate = LocalDateTime.now();
-        guestname = "guest_"+UUID.randomUUID();
+        name = "guest_"+UUID.randomUUID();
     }
 
 }
