@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final SettingService settingService;
 
     @Transactional
     public List<MenuDTO> getMenu(){
@@ -105,6 +106,8 @@ public class CategoryService {
         for (ItemParam item : items) {
             itemService.create(item);
         }
+
+        settingService.setQrOrderEnabled(true);
 
 
     }
