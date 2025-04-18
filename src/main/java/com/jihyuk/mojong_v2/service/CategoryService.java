@@ -43,7 +43,7 @@ public class CategoryService {
             throw new IllegalArgumentException("카테고리명을 정확히 입력해주세요.");
         }
 
-        if(categoryRepository.existsByName(name)){
+        if(categoryRepository.existsByNameAndEnabledTrue(name)){
             throw new DuplicateKeyException("이미 존재하는 카테고리 입니다.");
         }
 
@@ -65,7 +65,7 @@ public class CategoryService {
             throw new IllegalArgumentException("카테고리명을 정확히 입력해주세요.");
         }
 
-        if(categoryRepository.existsByName(name)){
+        if(categoryRepository.existsByNameAndEnabledTrue(name)){
             throw new DuplicateKeyException("이미 존재하는 카테고리 입니다.");
         }
 
@@ -89,7 +89,7 @@ public class CategoryService {
 
     //dummy data
     private final ItemService itemService;
-    @PostConstruct
+    //@PostConstruct
     public void dummyData(){
 
         List<String> categories = Arrays.asList("피자", "사이드", "음료", "디저트", "파스타", "소스", "핫도그", "햄버거", "치킨", "사진 없는 것");

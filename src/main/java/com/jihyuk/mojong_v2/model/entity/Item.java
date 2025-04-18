@@ -45,7 +45,13 @@ public class Item {
         this.stock = param.getStock();
     }
 
-    public void update(ItemParam param){
+    public void update(Category category, ItemParam param){
+        // 카테고리 변경 시 순서 초기화
+        if (!this.category.equals(category)) {
+            this.seq = 0;
+        }
+
+        this.category = category;
         this.name = param.getName().trim();
         this.description = param.getDescription().trim();
         this.photo = param.getPhoto().trim();

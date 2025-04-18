@@ -52,12 +52,14 @@ public class ItemService {
 
         Item item = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다. ID: " + id));
 
-        //이름 중복이면 예외 발생
-        if(itemRepository.existsByName(param.getName().trim())){
+        Category category = categoryRepository.findById(param.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("카테고리를 찾을 수 없습니다."));
+
+        //이름 중복이면 예외 발생 <= 수정필요 이름은 그대로인데 다른게 변경될수도
+        if(itemRepository.existsByNameAndIdNot(param.getName().trim(), id)){
             throw new DuplicateKeyException("중복된 상품명 입니다.");
         }
 
-        item.update(param);
+        item.update(category, param);
     }
 
     @Transactional

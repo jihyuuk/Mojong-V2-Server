@@ -6,6 +6,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
+    
+    //생성시
     boolean existsByName(String name);
+
+    //업데이트시
+    boolean existsByNameAndIdNot(String name, Long id);
 
 }
