@@ -9,6 +9,8 @@ import com.jihyuk.mojong_v2.model.enums.ROLE;
 import com.jihyuk.mojong_v2.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,7 +30,7 @@ public class SaleService {
     private final UserRepository userRepository;
     private final GuestRepository guestRepository;
 
-    //게스트 주문 서비스
+    //직원 주문 서비스
     @Transactional
     public Long staffSale(SaleParam saleParam, Authentication authentication) {
 
@@ -79,9 +81,9 @@ public class SaleService {
         return sale.getId();
     }
 
-    //주문기록들 조회
-    @Transactional
-    public List<HistoryDTO> getHistories(Authentication authentication){
+    //주문 기록들 조회
+    @Transactional(readOnly = true)
+    public Page<HistoryDTO> getHistories(Authentication authentication, Pageable pageable){
         //로그인 정보 (유저 이름, role)
         String username = authentication.getName();
 
@@ -90,11 +92,31 @@ public class SaleService {
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
 
         //해당 user 의 주문 내역들 조회
-        return saleRepository.findAllByUserId(user.getId()).stream().map(HistoryDTO::new).collect(Collectors.toList());
+        return saleRepository.findAllByUserId(user.getId(), pageable)
+                .map(HistoryDTO::new);
+    }
+
+    //모든 주문 기록들 조회
+    @Transactional(readOnly = true)
+    public Page<HistoryDTO> getAllHistories(Authentication authentication, Pageable pageable){
+        //로그인 정보 (유저 이름, role)
+        String username = authentication.getName();
+
+        //user 가져오기
+        User user = userRepository.findByUsernameAndEnabledTrue(username)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+
+        if(user.getRole() != ROLE.ROLE_ADMIN){
+            throw new AccessDeniedException("관리자만 접근 가능합니다.");
+        }
+
+        //모든 주문내역 조회
+        return saleRepository.findAll(pageable)
+                .map(HistoryDTO::new);
     }
 
     //주문 기록 상세 조회
-    @Transactional
+    @Transactional(readOnly = true)
     public HistoryDetailDTO getHistoryDetail(Long id, Authentication authentication){
         //로그인 정보 (유저 이름, role)
         String username = authentication.getName();

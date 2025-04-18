@@ -5,10 +5,15 @@ import com.jihyuk.mojong_v2.model.dto.HistoryDetailDTO;
 import com.jihyuk.mojong_v2.model.dto.MenuDTO;
 import com.jihyuk.mojong_v2.model.dto.SaleParam;
 import com.jihyuk.mojong_v2.service.CategoryService;
+import com.jihyuk.mojong_v2.service.PrinterService;
 import com.jihyuk.mojong_v2.service.SaleService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +33,7 @@ public class StaffController {
 
     private final CategoryService categoryService;
     private final SaleService saleService;
+    private final PrinterService printerService;
 
     //메뉴 조회
     @GetMapping("/menu")
@@ -40,10 +46,17 @@ public class StaffController {
     public ResponseEntity<Map<String, Object>> order(@Valid @RequestBody SaleParam saleParam, Authentication authentication){
         try {
             long saleId = saleService.staffSale(saleParam, authentication);
+            boolean printOK = true;
+
+            //영수증 출력
+//            if(!saleParam.isSkipReceipt()){
+//                printOK = printerService.print(saleId);
+//            }
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "주문 완료");
             response.put("saleId", saleId);
+            response.put("printOK", printOK);
 
             return ResponseEntity.ok(response);
         } catch (EntityNotFoundException e){
@@ -55,9 +68,12 @@ public class StaffController {
 
     //팬매 기록들
     @GetMapping("/history")
-    public ResponseEntity<?> history(Authentication authentication){
+    public ResponseEntity<?> history(
+            Authentication authentication,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            ){
         try {
-            List<HistoryDTO> histories = saleService.getHistories(authentication);
+            Page<HistoryDTO> histories = saleService.getHistories(authentication, pageable);
             return ResponseEntity.ok(histories);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(e.getMessage());

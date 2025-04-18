@@ -2,7 +2,7 @@ package com.jihyuk.mojong_v2.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jihyuk.mojong_v2.model.entity.Sale;
-import com.jihyuk.mojong_v2.model.enums.Payment;
+import com.jihyuk.mojong_v2.model.enums.PAYMENT;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,7 +40,7 @@ public class HistoryDetailDTO {
 
     private int finalAmount;
 
-    private Payment payment;
+    private PAYMENT PAYMENT;
 
     private List<SaleItemDTO> items;
 
@@ -52,7 +52,7 @@ public class HistoryDetailDTO {
         this.totalAmount = sale.getTotalAmount();
         this.discountAmount = sale.getDiscountAmount();
         this.finalAmount = sale.getFinalAmount();
-        this.payment = sale.getPayment();
+        this.PAYMENT = sale.getPayment();
 
         items = sale.getSaleItems().stream().map(SaleItemDTO::new).collect(Collectors.toList());
 
