@@ -15,6 +15,7 @@ public class SaleParam {
     private int finalAmount; //합계
     @NotNull(message = "지불 방식을 입력해주세요.")
     private PAYMENT payment; //지불 방법
+    private boolean skipReceipt; //영수증 생략 여부 (기본값 : 출력)
 
     @NotNull(message = "주문 아이템을 입력해주세요")
     private List<SaleItemDTO> items;

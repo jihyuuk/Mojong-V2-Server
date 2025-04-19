@@ -37,8 +37,13 @@ public class StaffController {
 
     //메뉴 조회
     @GetMapping("/menu")
-    public List<MenuDTO> menu(){
-        return categoryService.getStaffMenu();
+    public ResponseEntity<?> menu(Authentication authentication){
+        try{
+            List<MenuDTO> menu = categoryService.getStaffMenu(authentication);
+            return ResponseEntity.ok(menu);
+        }catch (AccessDeniedException e){
+            return ResponseEntity.status(UNAUTHORIZED).body( e.getMessage());
+        }
     }
 
     //주문하기
@@ -49,9 +54,11 @@ public class StaffController {
             boolean printOK = true;
 
             //영수증 출력
-//            if(!saleParam.isSkipReceipt()){
-//                printOK = printerService.print(saleId);
-//            }
+            if(!saleParam.isSkipReceipt()){
+                  //판매 기록 상세 재활용
+                    HistoryDetailDTO historyDetailDTO = saleService.getHistoryDetail(saleId, authentication);
+                    printOK = printerService.printReceipt(historyDetailDTO);
+            }
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "주문 완료");
@@ -88,6 +95,26 @@ public class StaffController {
         try {
             HistoryDetailDTO historyDetailDTO = saleService.getHistoryDetail(id, authentication);
             return ResponseEntity.ok(historyDetailDTO);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND).body(e.getMessage());
+        } catch (AccessDeniedException e){
+            return ResponseEntity.status(FORBIDDEN).body(e.getMessage());
+        }catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+    }
+
+    //영수증 프린트하기
+    @PostMapping("/print/{id}")
+    public ResponseEntity<?> printReceipt(@PathVariable Long id, Authentication authentication){
+        try {
+            //위의 판매 기록 상세 재활용
+            HistoryDetailDTO historyDetailDTO = saleService.getHistoryDetail(id, authentication);
+            boolean printOK = printerService.printReceipt(historyDetailDTO);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("printOK", printOK);
+            return ResponseEntity.ok(response);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(e.getMessage());
         } catch (AccessDeniedException e){
