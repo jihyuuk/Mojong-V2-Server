@@ -9,8 +9,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      #ddl-auto: create
+      #show-sql: true
 
   jackson:
     time-zone: Asia/Seoul

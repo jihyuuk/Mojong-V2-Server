@@ -50,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("https://green-mojong.netlify.app")); // React 서버 허용
+        configuration.setAllowedOriginPatterns(List.of("https://green-mojong.netlify.app","http://192.168.0.3:3000")); // React 서버 허용
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
         configuration.setExposedHeaders(List.of("Authorization")); // Authorization 헤더 노출
