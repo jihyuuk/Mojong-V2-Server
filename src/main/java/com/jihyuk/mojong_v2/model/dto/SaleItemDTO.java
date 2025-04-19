@@ -2,7 +2,6 @@ package com.jihyuk.mojong_v2.model.dto;
 
 import com.jihyuk.mojong_v2.model.entity.SaleItem;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

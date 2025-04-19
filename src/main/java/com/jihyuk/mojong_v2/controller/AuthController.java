@@ -20,17 +20,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    //회원가입
-    @PostMapping("/join")
-    public ResponseEntity<String> join(@Valid UserParam param) {
-        try {
-            authService.joinUser(param);
-            return ResponseEntity.ok("회원 가입 성공!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(CONFLICT).body(e.getMessage());
-        }
-    }
-
     //로그인
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid UserParam param) {
@@ -46,7 +35,18 @@ public class AuthController {
         }
     }
 
-    //게스트
+    //회원가입
+    @PostMapping("/join")
+    public ResponseEntity<String> join(@Valid UserParam param) {
+        try {
+            authService.joinUser(param);
+            return ResponseEntity.status(CREATED).body("회원 가입 성공!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(CONFLICT).body(e.getMessage());
+        }
+    }
+
+    //게스트 토큰 발행
     @GetMapping("/guest-token")
     public ResponseEntity<String> guest() {
         String guestToken = authService.guestToken();
@@ -55,6 +55,5 @@ public class AuthController {
                 .header("Authorization", "Bearer " + guestToken)
                 .body("토큰 정상 발행");
     }
-
 
 }

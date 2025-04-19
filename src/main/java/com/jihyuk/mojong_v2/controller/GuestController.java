@@ -1,6 +1,5 @@
 package com.jihyuk.mojong_v2.controller;
 
-import com.jihyuk.mojong_v2.model.dto.MenuDTO;
 import com.jihyuk.mojong_v2.model.dto.SaleParam;
 import com.jihyuk.mojong_v2.service.CategoryService;
 import com.jihyuk.mojong_v2.service.SaleService;
@@ -43,9 +42,9 @@ public class GuestController {
 
     //게스트 주문
     @PostMapping("/guest-order")
-    public ResponseEntity<?> guestOrder(@Valid @RequestBody SaleParam saleParam, Authentication authentication){
+    public ResponseEntity<?> guestOrder(@Valid @RequestBody SaleParam saleParam, Authentication authentication) {
 
-        if(!settingService.isQrOrderEnabled()){
+        if (!settingService.isQrOrderEnabled()) {
             return ResponseEntity.status(SERVICE_UNAVAILABLE).body("QR 주문이 현재 중단되었습니다.");
         }
 
@@ -57,7 +56,7 @@ public class GuestController {
             response.put("saleId", saleId);
 
             return ResponseEntity.ok(response);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(UNAUTHORIZED)
                     .body(Map.of("error", e.getMessage()));
         }

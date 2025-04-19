@@ -5,10 +5,11 @@ spring:
     import:
       - secret/datasource.yml
       - secret/jwt.yml
+      - secret/printer.yml
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
   jackson:

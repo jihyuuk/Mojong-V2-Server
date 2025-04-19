@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -39,34 +38,34 @@ public class AdminController {
 
     //직원 조회
     @GetMapping("/members")
-    public List<User> members(){
+    public List<User> members() {
         return userService.findAllMembers();
     }
 
     //직원 차단
     @PutMapping("/members/{id}/block")
-    public ResponseEntity<String> memberBlock(@PathVariable Long id){
+    public ResponseEntity<String> memberBlock(@PathVariable Long id) {
         userService.setUserEnabled(id, false);
         return ResponseEntity.ok("해당 직원을 차단했습니다.");
     }
 
     //직원 차단 해제
     @PutMapping("/members/{id}/unBlock")
-    public ResponseEntity<String> memberUnBlock(@PathVariable Long id){
+    public ResponseEntity<String> memberUnBlock(@PathVariable Long id) {
         userService.setUserEnabled(id, true);
         return ResponseEntity.ok("해당 직원을 활성화했습니다.");
     }
 
     //가입 승인
     @PutMapping("/members/{id}/approval")
-    public ResponseEntity<String> memberApproval(@PathVariable Long id){
+    public ResponseEntity<String> memberApproval(@PathVariable Long id) {
         userService.approval(id);
         return ResponseEntity.ok("해당 직원의 가입을 승인하였습니다.");
     }
 
     //가입 거절
     @PutMapping("/members/{id}/disApproval")
-    public ResponseEntity<String> memberDisApproval(@PathVariable Long id){
+    public ResponseEntity<String> memberDisApproval(@PathVariable Long id) {
         userService.disApproval(id);
         return ResponseEntity.ok("해당 직원의 가입을 거부하였습니다.");
     }
@@ -76,25 +75,25 @@ public class AdminController {
 
     //카테고리 추가
     @PostMapping("/category/new")
-    public ResponseEntity<String> newCategory(@RequestBody String name){
-        try{
+    public ResponseEntity<String> newCategory(@RequestBody String name) {
+        try {
             categoryService.create(name.trim());
-            return  ResponseEntity.ok("카테고리 추가 성공!");
-        }catch (IllegalArgumentException e){
+            return ResponseEntity.ok("카테고리 추가 성공!");
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
-        }catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             return ResponseEntity.status(CONFLICT).body(e.getMessage());
         }
     }
 
     //카테고리 삭제
     @DeleteMapping("/category/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long id){
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
 
-        try{
+        try {
             categoryService.setDisable(id);
-            return  ResponseEntity.ok("카테고리 삭제 성공!");
-        }catch (IllegalArgumentException e){
+            return ResponseEntity.ok("카테고리 삭제 성공!");
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
         }
 
@@ -102,58 +101,58 @@ public class AdminController {
 
     //카테고리 수정
     @PutMapping("/category/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody String newName){
-        try{
+    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody String newName) {
+        try {
             categoryService.updateName(id, newName.trim());
-            return  ResponseEntity.ok("카테고리 수정 성공!");
-        }catch (IllegalArgumentException e){
+            return ResponseEntity.ok("카테고리 수정 성공!");
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
-        }catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             return ResponseEntity.status(CONFLICT).body(e.getMessage());
         }
     }
 
     //카테고리 순서변경
     @PutMapping("/category/seq")
-    public ResponseEntity<String> seqCategory(@RequestBody List<Long> categoryIds){
+    public ResponseEntity<String> seqCategory(@RequestBody List<Long> categoryIds) {
         categoryService.changeSeq(categoryIds);
         return ResponseEntity.ok("카테고리 순서 변경 성공!");
     }
 
-    
+
     //상품 관리=====================================================================
 
     //상품 추가
     @PostMapping("/item/new")
-    public ResponseEntity<String> newItem(@Valid @RequestBody ItemParam itemParam){
-        try{
+    public ResponseEntity<String> newItem(@Valid @RequestBody ItemParam itemParam) {
+        try {
             itemService.create(itemParam);
-            return  ResponseEntity.ok("아이템 추가 성공!");
-        }catch (EntityNotFoundException e){
+            return ResponseEntity.ok("아이템 추가 성공!");
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
-        }catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             return ResponseEntity.status(CONFLICT).body(e.getMessage());
         }
     }
 
     //상품 삭제
     @DeleteMapping("/item/{id}")
-    public ResponseEntity<String> deleteItem(@PathVariable Long id){
+    public ResponseEntity<String> deleteItem(@PathVariable Long id) {
         itemService.delete(id);
-        return  ResponseEntity.ok("카테고리 삭제 성공!");
+        return ResponseEntity.ok("카테고리 삭제 성공!");
     }
 
     //상품 수정
     @PutMapping("/item/{id}")
-    public ResponseEntity<String> updateItem(@PathVariable Long id, @Valid @RequestBody ItemParam itemParam){
-        try{
+    public ResponseEntity<String> updateItem(@PathVariable Long id, @Valid @RequestBody ItemParam itemParam) {
+        try {
             itemService.update(id, itemParam);
-            return  ResponseEntity.ok("아이템 수정 성공!");
-        }catch (EntityNotFoundException e){
+            return ResponseEntity.ok("아이템 수정 성공!");
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
-        }catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             return ResponseEntity.status(CONFLICT).body(e.getMessage());
         }
     }
@@ -161,12 +160,10 @@ public class AdminController {
 
     //상품 순서변경
     @PutMapping("/item/seq")
-    public ResponseEntity<String> seqItems(@RequestBody List<Long> itemIds){
+    public ResponseEntity<String> seqItems(@RequestBody List<Long> itemIds) {
         itemService.changeSeq(itemIds);
         return ResponseEntity.ok("아이템 순서 변경 성공!");
     }
-
-
 
 
     //==========================================================================
@@ -176,7 +173,7 @@ public class AdminController {
     public ResponseEntity<?> history(
             Authentication authentication,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-    ){
+    ) {
         try {
             Page<HistoryDTO> histories = saleService.getAllHistories(authentication, pageable);
             return ResponseEntity.ok(histories);

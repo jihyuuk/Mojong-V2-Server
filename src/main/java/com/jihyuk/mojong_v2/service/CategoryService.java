@@ -4,10 +4,12 @@ import com.jihyuk.mojong_v2.model.dto.ItemParam;
 import com.jihyuk.mojong_v2.model.dto.MenuDTO;
 import com.jihyuk.mojong_v2.model.entity.Category;
 import com.jihyuk.mojong_v2.repository.CategoryRepository;
-import jakarta.annotation.PostConstruct;
+import com.jihyuk.mojong_v2.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +23,15 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final SettingService settingService;
+    private final UserRepository userRepository;
 
     @Transactional
-    public List<MenuDTO> getStaffMenu(){
+    public List<MenuDTO> getStaffMenu(Authentication authentication){
+        //사용자 유효한지 검증
+        if(!userRepository.existsByUsernameAndEnabledTrue(authentication.getName())){
+            throw new AccessDeniedException("인증이 만료된 사용자입니다.");
+        }
+
         //모든 카테고리와 아이템 join 으로 가져오기
         List<Category> categories = categoryRepository.findEnabledCategory();
         return categories.stream().map(MenuDTO::new).collect(Collectors.toList());

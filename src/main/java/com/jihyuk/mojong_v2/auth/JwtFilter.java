@@ -25,7 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
         //토큰 가져오기
         String token = getTokenFromRequest(request);
 
-        if(token != null && jwtUtil.validateToken(token)){
+        if (token != null && jwtUtil.validateToken(token)) {
 
             String username = jwtUtil.getUsernameFromToken(token);
             String role = jwtUtil.getRoleFromToken(token);
@@ -40,17 +40,16 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request){
+    private String getTokenFromRequest(HttpServletRequest request) {
         //토큰 파싱하기
         String token = request.getHeader("Authorization");
 
-        if(token != null && token.startsWith("Bearer ")){
-                return token.substring(7);
+        if (token != null && token.startsWith("Bearer ")) {
+            return token.substring(7);
         }
 
         return null;
     }
-
 
 
 }

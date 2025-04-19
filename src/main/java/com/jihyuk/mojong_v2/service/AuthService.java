@@ -62,6 +62,7 @@ public class AuthService {
 
 
     //게스트 토큰 발행
+    @Transactional
     public String guestToken() {
         //나중에 qr 닫으면 토큰 발행 정지 하는 코드 고려
         
@@ -70,6 +71,6 @@ public class AuthService {
         guestRepository.save(guest);
 
         //토큰발행
-        return jwtUtil.generateToken(guest.getGuestname(), ROLE.ROLE_GUEST);
+        return jwtUtil.generateToken(guest.getName(), ROLE.ROLE_GUEST);
     }
 }
