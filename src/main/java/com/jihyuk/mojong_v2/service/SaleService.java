@@ -134,8 +134,11 @@ public class SaleService {
             throw new AccessDeniedException("주문자 본인만 열람 할 수 있습니다.");
         }
 
+        //saleItems 가져오기
+        List<SaleItem> saleItems = saleItemRepository.findAllBySaleId(sale.getId());
+
         //해당 user 의 주문 내역들 조회
-        return new HistoryDetailDTO(sale);
+        return new HistoryDetailDTO(sale, saleItems);
     }
-    
+
 }

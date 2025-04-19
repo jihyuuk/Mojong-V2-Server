@@ -2,6 +2,7 @@ package com.jihyuk.mojong_v2.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jihyuk.mojong_v2.model.entity.Sale;
+import com.jihyuk.mojong_v2.model.entity.SaleItem;
 import com.jihyuk.mojong_v2.model.enums.PAYMENT;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 @Getter @Setter
 public class HistoryDetailDTO {
 
-        /*
+    /*
     1.제목 (오이 외 n개)
     2.판매번호 (27)
     3.판매자 (홍길동)
@@ -44,7 +45,7 @@ public class HistoryDetailDTO {
 
     private List<SaleItemDTO> items;
 
-    public HistoryDetailDTO(Sale sale) {
+    public HistoryDetailDTO(Sale sale, List<SaleItem> saleItems) {
         this.id = sale.getId();
         this.title = sale.getFirstItemName();
         this.username = sale.getUser().getUsername();
@@ -54,7 +55,7 @@ public class HistoryDetailDTO {
         this.finalAmount = sale.getFinalAmount();
         this.PAYMENT = sale.getPayment();
 
-        items = sale.getSaleItems().stream().map(SaleItemDTO::new).collect(Collectors.toList());
+        items = saleItems.stream().map(SaleItemDTO::new).collect(Collectors.toList());
 
         if (sale.getItemsCount() > 1){
             title += "외 "+(sale.getItemsCount()-1)+"개";
